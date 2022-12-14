@@ -15,20 +15,24 @@ internal class TextFieldParser
         using (var reader = new StreamReader(@".\Violations_2019.csv"))
         {
             List<string> date = new List<string>();
+            List<string> street = new List<string>();
 
             while (!reader.EndOfStream)
             {
                 var line = reader.ReadLine();
                 var values = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
+                var streets = Regex.Split(line, ",(?=(?:[^\"]*\"[^\"]*\")*[^\"]*$)");
 
                 var date_extract = values[11].Split(' ');
+                var street_name = streets[5];
                 date.Add(date_extract[0]);
+                street.Add(street_name);
             }
 
-
+            int num = 0;
             var counts = date
             .GroupBy(w => w)
-            .Select(g => new { Most_Day_Tickets = g.Key, Numbers_Of_Tickets = g.Count() })
+            .Select(g => new { Most_Day_Tickets = g.Key, Numbers_Of_Tickets = g.Count(), Street_Name = street[date.IndexOf(g.Key)]})
             .ToList();
 
             List<int> Ticket_Num = new List<int>();
